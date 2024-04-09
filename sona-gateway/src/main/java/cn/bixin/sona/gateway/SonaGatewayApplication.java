@@ -35,5 +35,6 @@ public class SonaGatewayApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         nettyServer.start();
+        log.info("NettyServer start ...");
     }
 }
