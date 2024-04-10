@@ -26,6 +26,12 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         this.handler = handler;
     }
 
+    /**
+     * 对应netty的connect事件即连接建立事件
+     *
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         int serverPort = NetUtil.getPort(ctx.channel().localAddress());
@@ -35,6 +41,12 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         }
     }
 
+    /**
+     * 对应netty的disconnect事件即连接断开事件
+     *
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel());
@@ -46,6 +58,13 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         }
     }
 
+    /**
+     * 对应netty的receive事件即读事件
+     *
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel());
@@ -55,6 +74,14 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         super.channelRead(ctx, msg);
     }
 
+    /**
+     * 对应netty的send事件即写事件
+     *
+     * @param ctx     上下文
+     * @param msg     消息
+     * @param promise 保证
+     * @throws Exception 异常
+     */
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         super.write(ctx, msg, promise);
@@ -62,6 +89,13 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         handler.send(channel, msg);
     }
 
+    /**
+     * 针对 WebSocket 协议的握手完成事件进行了处理
+     *
+     * @param ctx 上下文
+     * @param evt 事件
+     * @throws Exception 异常
+     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
@@ -76,6 +110,13 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         super.userEventTriggered(ctx, evt);
     }
 
+    /**
+     * 对应netty的caught事件即异常事件
+     *
+     * @param ctx   上下文
+     * @param cause 异常
+     * @throws Exception 异常
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel());

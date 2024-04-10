@@ -12,7 +12,12 @@ import com.alibaba.fastjson.JSON;
 /**
  * @author qinwei
  * <p>
- * 最上层的业务 ChannelHandler
+ * 最上层的业务 ChannelHandler，会根据请求中的 Command 命令，将当前请求路由到对应的业务 handler 中处理
+ * <p>
+ * 可以分发到下面的handler：
+ * ChatRoomHandler
+ * ClientPushHandler
+ * LoginAuthHandler
  */
 public class MercuryServerHandler extends ChannelHandlerDelegate {
 

@@ -34,7 +34,7 @@ import static cn.bixin.sona.gateway.msg.AccessResponse.*;
 /**
  * @author qinwei
  * <p>
- * 房间处理
+ * 房间处理,聊天室消息
  */
 @Service("chatRoom")
 public class ChatRoomHandler extends AbstractHandler {

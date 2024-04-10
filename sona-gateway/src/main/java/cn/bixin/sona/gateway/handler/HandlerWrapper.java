@@ -8,6 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author qinwei
+ * <p>
+ * 是下面这些业务处理handler 的包装类，
+ * 主要用于执行 handler 拦截器链，类似于 spring mvc 里面的拦截器，可以在业务处理的前后增加一些额外的处理逻辑：
+ * ChatRoomHandler
+ * ClientPushHandler
+ * LoginAuthHandler
  */
 @Slf4j
 public class HandlerWrapper implements Handler {

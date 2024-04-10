@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author qinwei
+ * 心跳和探测消息、握手等任务处理
  */
 @Slf4j
 public class IdleChannelHandler extends AbstractChannelHandler {
@@ -91,6 +92,12 @@ public class IdleChannelHandler extends AbstractChannelHandler {
         channel.removeAttribute(KEY_WRITE_TIMESTAMP);
     }
 
+    /**
+     * 执行了两个定时任务：
+     * <p>
+     * 心跳检测任务 (HeartbeatTimerTask)：根据配置的心跳检测时间间隔，定期执行心跳检测任务。
+     * 消息探测任务 (ProbeIdleTimerTask)：根据配置的消息探测时间间隔，定期执行消息探测任务。
+     */
     private static void startIdleTask() {
         ApolloConfiguration apolloConfig = SpringApplicationContext.getBean(ApolloConfiguration.class);
         //心跳检测
