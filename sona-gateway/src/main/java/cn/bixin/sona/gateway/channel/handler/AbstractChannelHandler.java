@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
  * MercuryServerHandler
  * 都是各种装饰者类，他们都继承至装饰者基类
  * <p>
- * 如果不太理解，请看装饰者模式讲解：https://zhuanlan.zhihu.com/p/64584677
+ * 如果不太理解，请看装饰者模式讲解：<a href="https://zhuanlan.zhihu.com/p/64584677">专栏地址</a>
  */
 public abstract class AbstractChannelHandler implements ChannelHandler {
 
