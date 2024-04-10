@@ -19,7 +19,7 @@ import java.net.InetSocketAddress;
 @Slf4j
 @io.netty.channel.ChannelHandler.Sharable
 public class NettyServerHandler extends ChannelDuplexHandler {
-
+    //底层处理器，被装饰者模式装饰
     private final ChannelHandler handler;
 
     public NettyServerHandler(ChannelHandler handler) {

@@ -31,6 +31,11 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
     private static final ServerMessageWebSocketDecoder WEBSOCKET_DECODER = new ServerMessageWebSocketDecoder();
 
     @Override
+    /**
+     * 客户端连接到Netty服务器时自动触发。
+     * 每当有新的客户端连接时，Netty会为该连接创建一个SocketChannel实例，
+     * 并立即调用initChannel(SocketChannel socketChannel)方法来初始化该通道的ChannelPipeline。
+     */
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
 
@@ -45,9 +50,17 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
             pipeline.addLast("encoder", WEBSOCKET_ENCODER);
             pipeline.addLast("decoder", WEBSOCKET_DECODER);
         }
+        // 添加自定义的handler
         pipeline.addLast("handler", NETTY_SERVER_HANDLER);
     }
 
+    /**
+     * 当通道发生异常时，Netty 会自动调用这个方法
+     *
+     * @param ctx   ChannelHandlerContext
+     * @param cause Throwable
+     * @throws Exception Exception
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);

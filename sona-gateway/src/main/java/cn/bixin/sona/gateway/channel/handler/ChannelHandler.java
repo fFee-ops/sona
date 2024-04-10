@@ -8,6 +8,7 @@ import cn.bixin.sona.gateway.exception.RemoteException;
  * @author qinwei
  * <p>
  * 对netty 底层事件的封装，业务层根据不同的事件执行相应的处理
+ * 原始对象的接口
  */
 public interface ChannelHandler {
 

@@ -58,6 +58,7 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
                     .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
                     .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(64 * 1024, 128 * 1024))
+                    //NettyServerInitializer 是一个 ChannelInitializer<SocketChannel> 的子类，它的作用是初始化每个新连接的 SocketChannel 的 ChannelPipeline。
                     .childHandler(new NettyServerInitializer());
             cf = bootstrap.bind(PORT).sync();
             channel = cf.channel();
