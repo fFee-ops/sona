@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
-
+    //用了装饰器模式，当有事件发生时，例如新连接建立或者数据到来时，处理顺序将从最外层的 AccessChannelHandler 开始，一直传递到最内层的 MercuryServerHandler。
     private static final NettyServerHandler NETTY_SERVER_HANDLER = new NettyServerHandler(ChannelHandlerWrap.wrap(new MercuryServerHandler()));
 
     private static final ServerMessageEncoder TCP_ENCODER = new ServerMessageEncoder();
