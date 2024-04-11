@@ -15,6 +15,9 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @author qinwei
+ * 客户端会将 App 是 前台还是后台的状态上报给 Mercury 网关，服务端维护的NettyChannel 会记录下这个状态。
+ * 处于前台状态的 channel，如果130秒内都没有读到过新数据，也没有收到任何心跳包，服务端就会主动下发 探测消息。
+ * 这时客户端需要在4秒内给服务端返回一个响应消息，否则会 close 掉这个连接。
  */
 @Slf4j
 public class ProbeIdleTimerTask extends HeartbeatTimerTask {

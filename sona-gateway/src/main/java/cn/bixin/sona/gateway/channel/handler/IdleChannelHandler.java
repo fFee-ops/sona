@@ -93,7 +93,7 @@ public class IdleChannelHandler extends AbstractChannelHandler {
     }
 
     /**
-     * 执行了两个定时任务：
+     * 使用 Netty 中的 HashedWheelTimer 去执行了两个定时任务：
      * <p>
      * 心跳检测任务 (HeartbeatTimerTask)：根据配置的心跳检测时间间隔，定期执行心跳检测任务。
      * 消息探测任务 (ProbeIdleTimerTask)：根据配置的消息探测时间间隔，定期执行消息探测任务。
