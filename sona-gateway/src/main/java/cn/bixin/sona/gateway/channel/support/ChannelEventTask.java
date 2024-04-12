@@ -69,6 +69,9 @@ public class ChannelEventTask implements Runnable {
         handle.recycle(this);
     }
 
+    /**
+     * 构造DispatchChannelHandler的时候传入的handler是MercuryServerHandler，所以这里执行的handler的方法是MercuryServerHandler的方法
+     */
     @Override
     public void run() {
         try {
@@ -82,6 +85,7 @@ public class ChannelEventTask implements Runnable {
                         handler.send(channel, message);
                         break;
                     case CONNECT:
+                        //因为MercuryServerHandler的connect方法是空实现，所以这里调用它的父类的connect方法，也就是ChannelHandlerDelegate的connect方法
                         MonitorUtils.newTransaction(MonitorUtils.CAT_IN_TRANS_TYPE, "Active", () -> handler.connect(channel));
                         break;
                     case DISCONNECT:
