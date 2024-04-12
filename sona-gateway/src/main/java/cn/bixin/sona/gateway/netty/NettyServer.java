@@ -111,6 +111,7 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
 
     private void shutdown() {
         try {
+            // TODO: 2024/4/11 梳理一下该方法的底层细节，文档上有 @sl
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         } catch (Throwable e) {
@@ -118,6 +119,10 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
         }
     }
 
+    /**
+     * 一直不停的检测是否还存在有效连接，如果有的话等待 250 ms再重新检测，不过检测时间最多3秒。
+     * 然后直接关闭所有连接。
+     */
     private void waitClose() {
         long startTime = System.currentTimeMillis();
         try {
@@ -133,6 +138,10 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
         }
     }
 
+    /**
+     * 服务端主动关闭连接
+     * 做了平滑处理，每次只close 指定数量的channel 。
+     */
     private void forceCloseChannel() {
         long startTime = System.currentTimeMillis();
         try {
@@ -150,6 +159,10 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
         }
     }
 
+    /**
+     * 当客户端收到 server 下发的 reconnect 消息之后，就会断开当前连接，然后重新建立连接。
+     * 每次只会同时给指定数量的连接下发 reconnect 消息 ，然后等待几秒后再接着下发，避免数万客户端同时发起重新建连，会造成其他的网关机器 CPU使用率突增。
+     */
     private void sendReconnectMsg() {
         try {
             long startTime = System.currentTimeMillis();
@@ -179,6 +192,12 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent> {
         }
     }
 
+    /**
+     * 服务端关闭 NioServerSocketChannel，取消端口绑定，关闭服务。
+     * 这里的 close() 方法实际是在 AbstractChannel 实现的。
+     * 在方法内部，会调用对应的 ChannelPipeline的 close() 方法，将 close 事件在 pipeline 上传播。而 close 事件
+     * 属于 Outbound 事件，所以会从 tail 节点开始，最终传播到 head 节点，使用 Unsafe 进行关闭：unsafe 内部最终会执行 Java 原生 NIO ServerSocketChannel 关闭
+     */
     private void closeServerChannel() {
         try {
             if (channel != null) {

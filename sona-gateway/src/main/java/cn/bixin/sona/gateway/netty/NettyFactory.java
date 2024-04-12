@@ -22,6 +22,7 @@ import java.util.concurrent.ThreadFactory;
 public class NettyFactory {
 
     public static EventLoopGroup eventLoopGroup(int threads, String threadName) {
+        //使用AffinityThreadFactory策略给进程绑定指定的cpu
         ThreadFactory threadFactory = new AffinityThreadFactory(threadName, AffinityStrategies.DIFFERENT_CORE);
         return supportEpoll() ? new EpollEventLoopGroup(threads, threadFactory) : new NioEventLoopGroup(threads, threadFactory);
     }

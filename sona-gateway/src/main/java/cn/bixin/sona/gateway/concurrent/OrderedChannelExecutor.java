@@ -50,6 +50,7 @@ public class OrderedChannelExecutor extends ThreadPoolExecutor {
     private LoadBalance<Executor> loadBalance;
 
     public OrderedChannelExecutor(int poolSize, String name) {
+        //使用AffinityThreadFactory策略给进程绑定指定的cpu
         this(poolSize, poolSize, 0, TimeUnit.SECONDS, new SynchronousQueue<>(), new AffinityThreadFactory(name, AffinityStrategies.DIFFERENT_CORE), new DiscardPolicy());
     }
 

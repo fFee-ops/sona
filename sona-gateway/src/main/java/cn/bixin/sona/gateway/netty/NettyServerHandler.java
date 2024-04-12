@@ -15,6 +15,7 @@ import java.net.InetSocketAddress;
 
 /**
  * @author qinwei
+ * `@Sharable` :无论有多少个连接，也只需 new 一个 ChannelHandler 实例，被所有 ChannelPipeline 共享
  */
 @Slf4j
 @io.netty.channel.ChannelHandler.Sharable
