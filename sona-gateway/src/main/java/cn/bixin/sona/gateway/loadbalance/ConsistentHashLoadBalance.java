@@ -6,6 +6,11 @@ import java.util.TreeMap;
 
 /**
  * @author qinwei
+ * <p>
+ * 使用了一致性哈希算法来进行负载均衡。
+ * 在构造函数中，根据传入的节点列表，为每个节点生成若干个虚拟节点，并存储到一个有序映射中。
+ * 提供了 selectNode 方法来选择一个节点，该方法将给定的键值哈希化后，通过 locate 方法定位到对应的节点。
+ * locate 方法根据给定的哈希值定位节点，它通过有序映射的 ceilingEntry 方法获取大于等于指定哈希值的节点，如果找不到则返回第一个节点。
  */
 public class ConsistentHashLoadBalance<T> implements LoadBalance<T> {
 

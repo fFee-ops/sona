@@ -110,16 +110,27 @@ public class IdleChannelHandler extends AbstractChannelHandler {
         IDLE_CHECK_TIMER.newTimeout(probeIdleTimerTask, 10, TimeUnit.SECONDS);
     }
 
+    /**
+     * 在指定的 NettyChannel 对象上启动握手任务，根据配置的握手等待超时时间创建一个定时任务，并将任务绑定到通道的属性中
+     *
+     * @param channel channel
+     */
     private static void startHandshakeTask(NettyChannel channel) {
         //握手认证
         ApolloConfiguration apolloConfig = SpringApplicationContext.getBean(ApolloConfiguration.class);
         int handshakeWaitSeconds = apolloConfig.getHandshakeWaitSeconds();
         if (handshakeWaitSeconds > 0) {
+            //连接建立后5秒内不握手的连接，会被HandshakeTimeoutTask强制断开
             HandshakeTimeoutTask handshakeTimeoutTask = new HandshakeTimeoutTask(channel);
             channel.setAttribute(KEY_HAND_SHAKE, IDLE_CHECK_TIMER.newTimeout(handshakeTimeoutTask, handshakeWaitSeconds, TimeUnit.SECONDS));
         }
     }
 
+    /**
+     * 关闭握手任务，通过移除相应的属性并取消相关的定时任务来实现。
+     *
+     * @param channel channel
+     */
     private static void closeTask(NettyChannel channel) {
         Timeout timeout = channel.removeAttribute(KEY_HAND_SHAKE, Timeout.class);
         if (timeout != null) {

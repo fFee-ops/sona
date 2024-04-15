@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author qinwei
+ *
+ * 握手超时任务
  */
 @Slf4j
 public class HandshakeTimeoutTask implements TimerTask {
