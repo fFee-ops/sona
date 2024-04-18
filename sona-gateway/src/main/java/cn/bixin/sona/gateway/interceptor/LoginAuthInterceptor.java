@@ -21,6 +21,14 @@ import org.springframework.core.annotation.Order;
 @Interceptor(name = "loginAuth")
 public class LoginAuthInterceptor implements HandlerInterceptor {
 
+    /**
+     * 在登陆请求前进行拦截，判断请求是否合法
+     *
+     * @param channel channel
+     * @param message message
+     * @return boolean
+     * @throws Exception Exception
+     */
     @Override
     public boolean preHandle(NettyChannel channel, AccessMessage message) throws Exception {
         byte[] body = message.getBody();
@@ -38,6 +46,13 @@ public class LoginAuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 登陆请求业务逻辑处理后进行拦截，取消握手超时定时器
+     *
+     * @param channel channel
+     * @param message message
+     * @throws Exception Exception
+     */
     @Override
     public void postHandle(NettyChannel channel, AccessMessage message) throws Exception {
         Timeout timeout = channel.removeAttribute(IdleChannelHandler.KEY_HAND_SHAKE, Timeout.class);

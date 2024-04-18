@@ -72,6 +72,13 @@ public class ChannelHandlerDelegate implements ChannelHandler {
 
     }
 
+    /**
+     * 只是做了异常记录
+     *
+     * @param channel   netty channel
+     * @param exception 异常
+     * @throws RemoteException 异常
+     */
     @Override
     public void caught(NettyChannel channel, Throwable exception) throws RemoteException {
         InetSocketAddress remoteAddress = channel.getRemoteAddress();

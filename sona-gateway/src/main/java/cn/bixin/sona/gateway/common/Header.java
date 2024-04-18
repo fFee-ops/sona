@@ -7,6 +7,12 @@ import java.nio.charset.StandardCharsets;
  */
 public class Header {
 
+    /**
+     * headerType	description
+     * 1	开启body压缩 （body 超过 2048 字节进行压缩， Deflater 算法）
+     * 2	房间header ，每个房间相关的command请求都会带上
+     * 3	开启批量合并，body中包含多条消息，需要额外解析
+     */
     private int type;
 
     private byte[] data;

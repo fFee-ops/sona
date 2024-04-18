@@ -240,12 +240,14 @@ public class NettyChannel extends AbstractChannel {
                 future.addListener((ChannelFutureListener) f -> close());
             }
             if (sent) {
+                //等待消息发送完成
                 success = future.await(timeout);
             }
             Throwable cause = future.cause();
             if (cause != null) {
                 throw cause;
             } else {
+                //监听器的作用是，在发送过程中如果出现了异常，则自动将异常传播到 ChannelPipeline，以便后续的处理程序可以捕获和处理异常。
                 future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
             }
         } catch (Throwable t) {

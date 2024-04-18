@@ -37,6 +37,7 @@ public class MercuryServerHandler extends ChannelHandlerDelegate {
     }
 
     private static void handRequest(NettyChannel channel, AccessMessage msg) throws RemoteException {
+        //返回的是HandlerWrapper，是对Handler的包装类，主要用于执行 handler 拦截器链
         Handler handler = MercuryRouter.router(msg.getCmd());
         Object result;
         try {

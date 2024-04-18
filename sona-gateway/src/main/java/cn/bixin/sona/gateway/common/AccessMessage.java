@@ -9,22 +9,49 @@ import java.util.List;
  */
 public class AccessMessage {
 
+    /**
+     * 1表示request ， 0表示response
+     */
     private boolean req;
 
+    /**
+     * 是否需要回复response ，1 需要， 0 不需要
+     */
     private boolean twoWay;
 
+    /**
+     * 是否心跳 ，1是 ， 0 不是
+     */
     private boolean heartbeat;
 
+    /**
+     * 版本号
+     */
     private int version;
 
+    /**
+     * 请求或响应的id（从1开始递增，单连接不重复），如果是request请求并且twoWay是false ，设置 0
+     */
     private int id;
 
+    /**
+     * command 命令，每个command都有对应的请求处理器{@link CommandEnum}
+     */
     private int cmd;
 
+    /**
+     * 所有 header + body 的大小
+     */
     private int length;
 
+    /**
+     * Header
+     */
     private List<Header> headers;
 
+    /**
+     * 消息体
+     */
     private byte[] body;
 
     public AccessMessage() {

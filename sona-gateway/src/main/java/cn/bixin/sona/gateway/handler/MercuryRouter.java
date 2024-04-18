@@ -38,6 +38,7 @@ public class MercuryRouter implements ApplicationListener<ContextRefreshedEvent>
         if (!StringUtils.hasText(name)) {
             throw new RemoteException("MercuryRouter failure , unable to find the cmd " + cmd + " !");
         }
+        //根据指定的键来获取对应的值，如果键不存在，则会使用提供的函数计算出一个值，并将其放入映射中
         return HANDLER_WRAPPERS.computeIfAbsent(name, MercuryRouter::wrapHandler);
     }
 

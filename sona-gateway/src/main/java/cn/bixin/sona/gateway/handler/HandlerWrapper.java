@@ -33,9 +33,11 @@ public class HandlerWrapper implements Handler {
             return null;
         }
         try {
+            //校验请求是否合法
             if (!chain.applyPreHandle(channel, message)) {
                 return null;
             }
+            //真正执行业务逻辑的入口
             Object result = handler.handle(channel, message);
             chain.applyPostHandle(channel, message);
             chain.applyAfterHandle(channel, message, null);

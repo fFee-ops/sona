@@ -58,6 +58,7 @@ public class HandlerInterceptorChain implements ApplicationContextAware {
             for (int i = 0; i < interceptors.size(); i++) {
                 HandlerInterceptor interceptor = interceptors.get(i);
                 if (!interceptor.preHandle(channel, message)) {
+                    //请求不合法会进入到afterHandle
                     applyAfterHandle(channel, message, null);
                     return false;
                 }
@@ -92,6 +93,9 @@ public class HandlerInterceptorChain implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        /**
+         * 容器启动的时候，将所有的 HandlerInterceptor 放入到 HandlerInterceptorChain 中
+         */
         init(applicationContext.getBeansOfType(HandlerInterceptor.class));
     }
 }
