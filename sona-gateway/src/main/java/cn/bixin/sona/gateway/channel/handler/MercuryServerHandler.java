@@ -48,6 +48,7 @@ public class MercuryServerHandler extends ChannelHandlerDelegate {
         if (result == null) {
             return;
         }
+        //返回给客户端AccessResponse
         channel.send(AccessMessageUtils.createResponse(msg.getId(), msg.getCmd(), JSON.toJSONBytes(result)));
     }
 

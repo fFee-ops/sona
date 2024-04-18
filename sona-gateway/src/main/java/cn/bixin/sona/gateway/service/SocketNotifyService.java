@@ -31,6 +31,12 @@ public class SocketNotifyService {
     @Resource
     private RocketSender rocketSender;
 
+    /**
+     * 处理连接事件，只处理房间连接
+     *
+     * @param channel 连接
+     * @return 发送结果
+     */
     public SendResult processConnect(NettyChannel channel) {
         ChannelAttrs attrs = channel.getAttrs();
         if (ChannelTypeEnum.CHATROOM.getType() != attrs.getChannelType()) {

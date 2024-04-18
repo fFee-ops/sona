@@ -37,7 +37,7 @@ public class HandlerWrapper implements Handler {
             if (!chain.applyPreHandle(channel, message)) {
                 return null;
             }
-            //真正执行业务逻辑的入口
+            //真正执行业务逻辑的入口，根据不同的handler，执行不同的业务逻辑，也就是AbstractHandler的子类
             Object result = handler.handle(channel, message);
             chain.applyPostHandle(channel, message);
             chain.applyAfterHandle(channel, message, null);

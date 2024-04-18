@@ -53,6 +53,7 @@ public class LoginAuthHandler extends AbstractHandler {
         attrs.setForeground(handShake.getB() == 0);
 
         if (!channel.markAuth()) {
+            //重复握手直接返回成功
             EventRecordLog.logEvent(channel, LOGIN_EVENT, message, "Repeated handshake");
             return AccessResponse.SUCCESS;
         }

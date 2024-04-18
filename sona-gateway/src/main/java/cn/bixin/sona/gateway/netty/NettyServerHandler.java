@@ -70,8 +70,9 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel());
         handler.receive(channel, msg);
-        //对于 websocket 场景, 这里接收到的 msg 可能是 websocketframe， 它是属于 ReferenceCounted,
-        // 需要触发 TailContext 的 channelRead 去执行 ReferenceCountUtil.release(msg)
+        // 对于 WebSocket 场景，接收到的消息可能是 WebSocketFrame 对象，它属于 ReferenceCounted 接口的实现类
+        // 需要手动释放资源，因此调用 super.channelRead(ctx, msg) 方法触发 TailContext 的 channelRead 方法
+        // 以执行 ReferenceCountUtil.release(msg) 释放资源
         super.channelRead(ctx, msg);
     }
 

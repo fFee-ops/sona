@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 public class NettyChannel extends AbstractChannel {
 
     private static final ConcurrentMap<String, NettyChannel> CHANNEL_MAP = PlatformDependent.newConcurrentHashMap(1 << 14);
-
+    //各个连接类型的连接数
     private static final ConcurrentMap<Integer, AtomicInteger> CHANNEL_TYPE_COUNT_MAP = PlatformDependent.newConcurrentHashMap();
     // 未认证的连接数
     private static final AtomicInteger UN_AUTH_COUNT = new AtomicInteger();

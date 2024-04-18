@@ -52,8 +52,10 @@ public class NettyFuture extends CompletableFuture<AccessMessage> {
         if (future == null) {
             return;
         }
+        //取消超时检查
         Timeout t = future.timeoutCheckTask;
         t.cancel();
+        //标记异步操作的结果已经完成
         future.complete(message);
     }
 
