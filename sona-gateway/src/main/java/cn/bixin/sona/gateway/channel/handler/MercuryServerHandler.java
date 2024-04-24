@@ -28,6 +28,7 @@ public class MercuryServerHandler extends ChannelHandlerDelegate {
             if (msg.isTwoWay()) {
                 handRequest(channel, msg);
             } else {
+                //直接执行handler，没有响应客户端的逻辑，是handRequest的简化版
                 MercuryRouter.router(msg.getCmd()).receive(channel, msg);
             }
         } else {

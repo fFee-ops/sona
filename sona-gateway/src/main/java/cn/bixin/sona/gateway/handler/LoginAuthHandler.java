@@ -59,6 +59,8 @@ public class LoginAuthHandler extends AbstractHandler {
         }
 
         NettyChannel.addChannelTypeCount(channel);
+        // TODO: 2024/4/24 完善注释 @sl
+        //核心处理逻辑，登录和长链接建立事件的区别在于？？？
         socketNotifyService.processConnect(channel);
         EventRecordLog.logEvent(channel, LOGIN_EVENT, message, bodyData);
         MonitorUtils.logCatEventWithChannelAttrs(MonitorUtils.LOGIN, "", channel, true);

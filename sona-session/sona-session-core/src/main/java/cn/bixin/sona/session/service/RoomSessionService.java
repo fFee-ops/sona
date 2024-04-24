@@ -40,13 +40,21 @@ public class RoomSessionService {
     @Resource
     private ServerStatCache serverStatCache;
 
+    /**
+     * 存储用户的会话信息到redis
+     *
+     * @param json 会话信息
+     */
     public void processChannelActive(JSONObject json) {
         String channelId = json.getString(Constants.MQ_REPORT_KEY_CHANNEL_ID);
         long timestamp = json.getLong(Constants.MQ_REPORT_KEY_TIMESTAMP_SHORT);
         log.info("channelActive, channelId={}, timestamp={}", channelId, timestamp);
 
+        //serializer是Redis的序列化器，主要作用是将Java对象转换为可以存储在Redis中的字节流，或者将从Redis中读取的字节流转换回Java对象
         RedisSerializer<String> serializer = stringRedisTemplate.getStringSerializer();
+        //将channelId转换为Redis的键
         byte[] chKey = serializer.serialize(CacheKey.getSonaChannelKey(channelId));
+        //创建一个RedisCallback，在这个回调中，将deviceId，timestamp和uid（如果存在）存储到Redis中，并设置键的过期时间
         RedisCallback<String> callback = connection -> {
             connection.hSet(chKey, serializer.serialize(Constants.BODY_PARAM_DEVICEID), serializer.serialize(json.getString(Constants.BODY_PARAM_DEVICEID)));
             connection.hSet(chKey, serializer.serialize(Constants.MQ_REPORT_KEY_TIMESTAMP_SHORT), serializer.serialize(String.valueOf(timestamp)));
@@ -55,6 +63,7 @@ public class RoomSessionService {
                 connection.hSet(chKey, serializer.serialize(Constants.BODY_PARAM_UID), serializer.serialize(uid));
                 connection.sAdd(serializer.serialize(CacheKey.getUidKey(uid)), serializer.serialize(channelId));
             }
+            //过期时间1周
             connection.expire(chKey, REDIS_TTL_SESSION);
             return null;
         };
