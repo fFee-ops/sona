@@ -33,6 +33,7 @@ public class SocketNotifyService {
 
     /**
      * 处理连接事件，只处理房间连接
+     * 将login事件发送到MQ进行后续处理
      *
      * @param channel 连接
      * @return 发送结果

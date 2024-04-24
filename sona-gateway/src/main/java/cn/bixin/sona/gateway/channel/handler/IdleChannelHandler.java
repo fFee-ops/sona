@@ -64,6 +64,7 @@ public class IdleChannelHandler extends AbstractChannelHandler {
         setReadTimestamp(channel);
         AccessMessage msg = (AccessMessage) message;
         if (!msg.isHeartbeat()) {
+            //所有非心跳msg都会被MercuryServerHandler处理
             handler.receive(channel, message);
             return;
         }
