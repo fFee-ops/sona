@@ -134,6 +134,7 @@ public class ChatRoomHandler extends AbstractHandler {
             MonitorUtils.logEvent(MonitorUtils.CHATROOM_PROBLEM, "UidChangedWhenInRoom");
             return new AccessResponse(8010, "you should leave room [" + lastRooms + "] first before changing to another user!");
         }
+        //获取用户身份，0为游客，1为用户
         String identity = headerObj.getString(Constants.CHATROOM_MSG_KEY_IDENTITY);
         attrs.setVisitor("0".equals(identity));
         attrs.setUid(uid);

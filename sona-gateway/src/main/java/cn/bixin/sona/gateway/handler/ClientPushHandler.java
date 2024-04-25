@@ -20,7 +20,7 @@ import static cn.bixin.sona.gateway.msg.AccessResponse.*;
 /**
  * @author qinwei
  * <p>
- * 处理client端上报消息
+ * 处理client端上报消息：上报APP是否在前台
  */
 @Service("clientPush")
 public class ClientPushHandler extends AbstractHandler {

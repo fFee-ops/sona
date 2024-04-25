@@ -103,6 +103,20 @@ public class RoomSessionService {
         stringRedisTemplate.executePipelined(callback);
     }
 
+    /**
+     * 处理进入房间事件，将房间信息、用户信息存储到redis
+     * 存储后类似结构如下
+     * {
+     * "sona:ch:channelId": {
+     * "uid": "用户ID"
+     * },
+     * "sona:u:uid": {
+     * "channelId": "房间名"
+     * }
+     * }
+     *
+     * @param json 进入房间事件
+     */
     public void processEnterRoom(JSONObject json) {
         String channelId = json.getString(Constants.MQ_REPORT_KEY_CHANNEL_ID);
         Long timestamp = json.getLong(Constants.MQ_REPORT_KEY_TIMESTAMP_SHORT);

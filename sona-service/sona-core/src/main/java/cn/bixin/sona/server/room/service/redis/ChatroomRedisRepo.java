@@ -198,12 +198,32 @@ public class ChatroomRedisRepo {
         }
     }
 
+    /**
+     * 用户ID添加到聊天室的所有用户集合和小范围用户集合中，设置键的过期时间，以及在必要时移除分数最低的用户。
+     * <p>
+     * 为啥需要两个集合？
+     * 1、所有用户集合是一个 Redis Set，它存储了聊天室中所有在线的用户。这个集合主要用于快速检查一个用户是否在线，
+     * 或者获取聊天室的在线人数。因为 Redis Set 的这两个操作都是 O(1) 复杂度，所以非常高效。
+     * <p>
+     * 2、小范围用户集合是一个 Redis Sorted Set，它存储了聊天室中部分用户的信息，每个用户都有一个分数。这个集合主
+     * 要用于获取分数最高（或最低）的用户，或者获取用户的排名。这些操作在 Redis Sorted Set 中也是非常高效的。
+     * <p>
+     * 如果我们只使用一个 Sorted Set 来存储所有用户的信息，那么在执行一些操作时可能会遇到性能问题。例如，检查一个用户
+     * 是否在线需要在 Sorted Set 中搜索用户，这是一个 O(log N) 的操作， 其中 N 是 Sorted Set 中元素的数量。同样，
+     * 获取在线人数也需要计算 Sorted Set 中元素的数量，这也是一个 O(N) 的操作。
+     *
+     * @param roomId 聊天室ID
+     * @param uid    用户ID
+     * @param score  用户分数
+     */
     public void enterChatroom(long roomId, String uid, int score) {
         RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
         RedisCallback<String> callback = connection -> {
+            //将用户ID（uid）添加到聊天室的所有用户集合中
             byte[] allSet = serializer.serialize(getSonaChatroomAllUserKey(roomId));
             connection.sAdd(allSet, serializer.serialize(uid));
             connection.expire(allSet, 12 * 60 * 60);
+            //将用户ID和分数添加到聊天室的小范围用户集合中
             byte[] smallSet = serializer.serialize(getSonaSmallRangeKey(roomId));
             connection.zAdd(smallSet, score, serializer.serialize(uid));
             connection.expire(smallSet, 12 * 60 * 60);

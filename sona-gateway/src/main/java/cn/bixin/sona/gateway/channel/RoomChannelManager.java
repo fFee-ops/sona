@@ -44,6 +44,7 @@ public class RoomChannelManager {
         }
 
         public boolean registerUid(String uid, NettyChannel channel) {
+            //维护了一个用户ID到通道的映射
             return memberChannelsMap.computeIfAbsent(uid, k -> new ConcurrentHashSet<>(1)).add(channel);
         }
 
@@ -68,6 +69,14 @@ public class RoomChannelManager {
         }
     }
 
+    /**
+     * 将NettyChannel添加到指定的房间中，并将用户ID注册到房间的成员通道映射中
+     *
+     * @param roomName 房间名
+     * @param channel  NettyChannel
+     * @param uid      用户ID
+     * @return 是否新添加的
+     */
     public boolean addChannel(String roomName, NettyChannel channel, String uid) {
         RoomInfo roomInfo = roomInfoMap.computeIfAbsent(roomName, RoomInfo::new);
         if (StringUtils.isNotBlank(uid)) {

@@ -100,6 +100,7 @@ public class SonaSessionListener implements RocketMQListener<MessageExt> {
             log.info("SonaSessionListener, the user has been enter room uid={}, roomId={}", uid, roomId);
             return;
         }
+        //获取用户在房间的分数，VIP用户分数为100，普通用户分数为1
         int score = StringUtils.hasText(chatroomRedisRepo.getChatroomVipUser(roomId, uid)) ? 100 : 1;
         chatroomRedisRepo.enterChatroom(roomId, uid, score);
     }
