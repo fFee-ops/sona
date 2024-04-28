@@ -95,6 +95,15 @@ public class ServerStatCache {
 
     /**
      * 判断连接是否有效
+     * 工作原理如下：
+     * <p>
+     * 1. 首先，它检查`connTime`是否为`null`。`connTime`是连接的创建时间。
+     * <p>
+     * 2. 然后，它检查`connTime`是否小于`ServerStat`的`startTime`。`ServerStat`是服务器的状态信息，`startTime`是服务器启动的时间。
+     * <p>
+     * 3. 如果`connTime`为`null`或者小于`ServerStat`的`startTime`，那么它会返回`false`，表示连接无效。这是因为如果一个连接的创建时间早于服务器的启动时间，那么这个连接肯定是在服务器上次启动之前创建的，所以这个连接已经无效了。
+     * <p>
+     * 这段代码的主要目的是确保连接是有效的，即连接的服务器是在线的，且服务器没有重启。
      */
     public boolean judgeChannelValid(ChannelIdInfo channelIdInfo, String channelId) {
         if (channelIdInfo == null) {

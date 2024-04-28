@@ -87,6 +87,12 @@ public class RoomChannelManager {
         return isNewAdded;
     }
 
+    /**
+     * 从指定的聊天室中移除一个通道（channel）
+     *
+     * @param roomName 房间名
+     * @param channel  NettyChannel
+     */
     public void removeChannel(String roomName, NettyChannel channel) {
         RoomInfo roomInfo = roomInfoMap.get(roomName);
         if (roomInfo != null) {

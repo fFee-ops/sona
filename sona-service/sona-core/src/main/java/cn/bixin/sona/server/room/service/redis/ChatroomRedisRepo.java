@@ -102,6 +102,14 @@ public class ChatroomRedisRepo {
         }
     }
 
+    /**
+     * 1. 从聊天室的所有用户集合中移除了用户。这个集合是一个Redis Set，它存储了聊天室中所有在线的用户。
+     * 2. 从聊天室的小范围用户集合中移除了用户。这个集合是一个Redis Sorted Set，它存储了聊天室中部分用户的信息，每个用户都有一个分数。
+     * 3. 删除了用户的VIP信息。这是一个Redis Key，它存储了用户的VIP信息。
+     *
+     * @param roomId 房间ID
+     * @param uid   用户ID
+     */
     public void leaveChatroom(long roomId, long uid) {
         RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
         RedisCallback<String> callback = connection -> {

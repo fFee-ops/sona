@@ -147,11 +147,13 @@ public class ChatRoomHandler extends AbstractHandler {
 
     private AccessResponse handleLeave(NettyChannel channel, AccessMessage message, String room) {
         ChannelAttrs attrs = channel.getAttrs();
+        //用户最近访问的聊天室
         Set<String> lastRooms = attrs.getRooms();
         if (lastRooms == null || !lastRooms.contains(room)) {
             EventRecordLog.logEvent(channel, CHATROOM_EVENT, message, "Not in room when leave : " + lastRooms);
             MonitorUtils.logEvent(MonitorUtils.CHATROOM_PROBLEM, "NotInRoomWhenLeave");
         }
+        //当用户离开聊天室时，他们的通道需要从聊天室的通道列表中移除。这样，当有消息发送到聊天室时，服务器就不会再向这个已经离开的用户发送消息。
         RoomChannelManager.MANAGER_FOR_CHATROOM.removeChannel(room, channel);
         String uid = attrs.getUid();
         if (!StringUtils.hasText(uid)) {

@@ -140,6 +140,24 @@ public class RoomSessionService {
         stringRedisTemplate.executePipelined(callback);
     }
 
+    /**
+     * 这个方法用于处理用户离开聊天室的事件。
+     * <p>
+     * 1. 首先，从传入的JSON对象中提取出时间戳、房间名、用户ID、命令和通道ID。
+     * <p>
+     * 2. 然后，根据用户ID生成一个Redis键，用于获取用户当前所有的<连接,房间>映射。
+     * <p>
+     * 3. 如果用户当前所有的<连接,房间>映射中不包含要离开的房间，那么记录一条警告日志。
+     * <p>
+     * 4. 调用`compareWhenLeaveRoom`方法，比较用户所有的<连接,房间>，判断当前想要离开的<连接,房间>是否最后一个离开房间的连接。同时还会根据server的心跳信息，找
+     * 出过期无效的连接，同时进行清除。这个方法会返回实际彻底离开的房间和离开原因的映射。
+     * <p>
+     * 5. 如果命令是13（被后端sona强制踢出），并且实际彻底离开的房间中包含当前房间，那么从实际彻底离开的房间中移除当前房间，并记录一条信息日志。
+     * <p>
+     * 6. 如果实际彻底离开的房间不为空，那么记录一条信息日志，并调用`reportSona`方法，上报给sona。
+     * <p>
+     * 7. 最后，从用户当前所有的<连接,房间>映射中删除当前的<连接,房间>，并记录一条信息日志。
+     */
     public void processLeaveRoom(JSONObject json) {
         Long timestamp = json.getLong(Constants.MQ_REPORT_KEY_TIMESTAMP_SHORT);
         String room = json.getString(Constants.MQ_REPORT_KEY_ROOM);
@@ -188,7 +206,9 @@ public class RoomSessionService {
             String room = entry.getValue();
             boolean channelValid = serverStatCache.judgeChannelValid(channelId);
             if (!channelValid) {
+                // 删除无效的连接
                 deleteInvalidChannel(uid, channelId, room);
+                // 将房间和离开原因添加到受影响的房间映射中
                 roomsAffected.putIfAbsent(room, LeaveReason.CHANNEL_INVALID);
             }
             boolean shouldLeave = channelRoomsToLeave.containsValue(room);
