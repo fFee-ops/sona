@@ -37,6 +37,14 @@ public class AckMessageInterceptor {
         return pjp.proceed();
     }
 
+    /**
+     * 这个方法是一个环绕通知，用于在发送聊天室消息的方法执行前后进行一些处理。
+     * 如果有高优先级的消息，那么就会发送一个ACK消息。
+     *
+     * @param pjp ProceedingJoinPoint对象，用于获取被通知方法的信息，以及控制被通知方法的执行。
+     * @return 被通知方法的返回值。
+     * @throws Throwable 如果被通知方法或通知方法抛出异常，那么这个异常会被抛出。
+     */
     @Around("execution(* cn.bixin.sona.server.im.service.MercurySendService.sendChatRoomMessage(..))")
     public Object handleAckRoomMessage(ProceedingJoinPoint pjp) throws Throwable {
         Arrays.stream(pjp.getArgs())

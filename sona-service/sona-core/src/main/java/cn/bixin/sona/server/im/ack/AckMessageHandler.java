@@ -56,7 +56,7 @@ public class AckMessageHandler {
         String unackKey = getUnackMsgKey(request.getMessageId());
         redisTemplate.opsForSet().add(unackKey, request.getAckUids().stream().map(String::valueOf).toArray(String[]::new));
         redisTemplate.expire(unackKey, 60, TimeUnit.SECONDS);
-        //延迟检测
+        //延迟检测 延迟3s后检测
         ACK_CHECK_TIMER.newTimeout(timeout -> retrySendIfNeeded(wrap), 3, TimeUnit.SECONDS);
     }
 
