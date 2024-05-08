@@ -43,6 +43,7 @@ public class ChannelHandlerDelegate implements ChannelHandler {
         double duration = (SystemClock.currentTimeMillis() - attrs.getCreateTime()) / 1000.0;
         int channelType = attrs.getChannelType();
         if (ChannelTypeEnum.CHATROOM.getType() == channelType) {
+            //表示用户加入的聊天室
             Set<String> rooms = attrs.getRooms();
             if (!CollectionUtils.isEmpty(rooms)) {
                 for (String roomName : rooms) {

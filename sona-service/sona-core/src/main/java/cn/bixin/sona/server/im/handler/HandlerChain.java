@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public class HandlerChain implements ApplicationContextAware {
 
+    //按照order排序，处理的时候按照顺序处理
     private List<ChatRoomHandler> handlers;
 
     @Resource
