@@ -30,6 +30,7 @@ public class FlowControl {
 
     public FlowStrategy throttle(String key, FlowConfig config) {
         return Optional.ofNullable(config)
+                //执行限流脚本
                 .filter(conf -> execute(key, conf) != 1)
                 .map(conf -> FlowStrategy.REFUSE)
                 .orElse(FlowStrategy.PASS);
