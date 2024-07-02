@@ -17,9 +17,19 @@ import java.util.List;
  */
 public interface RouterRoomMessageService {
 
+    /**
+     * 当前房间是聊天室模式，比如直播间这种，一条消息发送给房间内的所有在线用户
+     * @param request 消息内容
+     * @return 消息ID
+     */
     @CommonExecutor(desc = "发送聊天室消息", printParam = true, printResponse = true)
     Response<String> sendChatRoomMessage(@NotNull RoomMessageRequest request);
 
+    /**
+     * 当前房间是群组模式，比如游戏房这种，一条消息发送给房间内的所有用户
+     * @param request 消息内容
+     * @return 消息ID
+     */
     @CommonExecutor(desc = "发送群组消息", printParam = true, printResponse = true)
     Response<String> sendGroupMessage(@NotNull GroupMessageRequest request);
 

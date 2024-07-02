@@ -31,14 +31,28 @@ public class CounterService {
         return CAFFEINE.get(name, s -> new TimeSlidingWindow(thresholdConfig.getOrDefault(s, 8)));
     }
 
+    /**
+     * 增加指定房间的计数
+     *
+     * @param name 房间名
+     */
     public static void increment(String name) {
         getSlidingWindow(name).increment();
     }
 
+    /**
+     * 判断指定房间是否超过阈值
+     *
+     * @param name 房间名
+     * @return 是否超过阈值
+     */
     public static boolean compute(String name) {
         return getSlidingWindow(name).exceedThreshold();
     }
 
+    /**
+     * 从Apollo配置中心获取阈值配置和过期时间配置，并更新到thresholdConfig字段和CAFFEINE字段中
+     */
     @PostConstruct
     public void init() {
         updateConfig(ConfigService.getAppConfig().getProperty(APOLLO_KEY_THRESHOLD, "{}"));

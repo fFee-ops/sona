@@ -46,6 +46,8 @@ public class AckMessageHandler {
 
     /**
      * 消息必达处理
+     *拿到所有需要确认的uid，存储在redis的set中
+     * 延迟三秒后检查
      */
     public void handleNeedAckMessage(MessageRequestWrap wrap) {
         RoomMessageRequest request = wrap.getRequest();
@@ -61,7 +63,7 @@ public class AckMessageHandler {
     }
 
     /**
-     * 重发消息
+     * 重发消息：检查是否需要重发消息，并在需要的情况下进行重发
      */
     private void retrySendIfNeeded(MessageRequestWrap wrap) {
         RoomMessageRequest request = wrap.getRequest();

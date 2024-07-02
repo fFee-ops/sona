@@ -25,12 +25,16 @@ public class Constants {
     public static final String MQ_REPORT_KEY_UNAUTH_CONN = "unAuthConn";
 
     public static final String MQ_REPORT_KEY_UID = "uid";
+    //房间号
     public static final String MQ_REPORT_KEY_ROOM = "room";
+    //房间号列表
     public static final String MQ_REPORT_KEY_ROOMS = "rooms";
+    //global字段用于控制消息的广播范围，如果为true则全局广播，如果为false则只广播给特定的聊天室
     public static final String MQ_REPORT_KEY_GLOBAL = "global";
     public static final String MQ_REPORT_KEY_GROUP = "group";
     public static final String MQ_REPORT_KEY_CMD = "cmd";
     public static final String MQ_REPORT_KEY_DATA = "data";
+    //用户ID的列表，这些用户是消息的接收者
     public static final String MQ_REPORT_KEY_MEMBERS = "members";
     public static final String MQ_REPORT_KEY_PRIORITY = "highPriority";
     public static final String MQ_REPORT_KEY_ACK_UIDS = "ackUids";

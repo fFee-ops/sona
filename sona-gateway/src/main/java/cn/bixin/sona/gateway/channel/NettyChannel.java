@@ -181,7 +181,13 @@ public class NettyChannel extends AbstractChannel {
         }
     }
 
+    /**
+     * 将消息添加到缓冲区，并在一段时间后发送这些消息
+     *
+     * @param msg 消息
+     */
     private void fastSendLater(AccessMessage msg) {
+        //将消息（msg）添加到buffer中
         buffer.offer(msg, this::fastSendNow);
         if (FLUSH_UPDATER.compareAndSet(this, 0, 1)) {
             channel.eventLoop().schedule(this::flush, 50, TimeUnit.MILLISECONDS);

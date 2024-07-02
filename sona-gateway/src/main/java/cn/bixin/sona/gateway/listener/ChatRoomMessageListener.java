@@ -56,6 +56,7 @@ public class ChatRoomMessageListener implements RocketMQListener<MessageExt> {
 
     public void asyncHandle(JSONObject json, boolean global, String[] roomList) {
         RoomMessageTask[] tasks;
+        //每个RoomInfo对象应用一个函数，这个函数会创建一个新的RoomMessageTask任务
         if (global) {
             tasks = RoomChannelManager.MANAGER_FOR_CHATROOM.getAllRoomInfos().stream().map(roomInfo -> RoomMessageTask.newTask(json, roomInfo)).toArray(RoomMessageTask[]::new);
         } else {

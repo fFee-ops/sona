@@ -55,6 +55,7 @@ public class RocketSender {
         Transaction t = Cat.newTransaction("RocketMQ", topic);
         try {
             MessageBuilder<?> builder = MessageBuilder.withPayload(content);
+            //发送消息，最后在"TOPIC_CHATROOM_MESSAGE_SEND"的监听者处进行处理
             rocketMQTemplate.asyncSend(topic, builder.build(), new SendCallback() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
