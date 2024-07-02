@@ -29,6 +29,11 @@ import java.util.Objects;
 @RocketMQMessageListener(topic = "TOPIC_GROUP_MESSAGE_SEND", consumerGroup = "GROUP_MESSAGE-MERCURY_GROUP", messageModel = MessageModel.BROADCASTING)
 public class GroupMessageListener implements RocketMQListener<MessageExt> {
 
+    /**
+     * 发送群组消息，直接遍历群组内的所有channelId，直接发送消息
+     *
+     * @param messageExt 消息
+     */
     @Override
     public void onMessage(MessageExt messageExt) {
         MonitorUtils.logBatchEvent("RocketMQListener", getClass().getSimpleName(), 1, 0);
