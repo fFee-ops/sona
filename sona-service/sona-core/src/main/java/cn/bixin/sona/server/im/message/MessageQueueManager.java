@@ -26,6 +26,7 @@ public class MessageQueueManager {
             messageLog.saveMessageLog(request, "DISCARD");
             return;
         }
+        //日志存储在elasticSearch中
         messageLog.saveMessageLog(request, "DELAY");
         // 处理请求
         getMessageQueueService(request.getProductCode()).start(request);

@@ -22,6 +22,9 @@ public class RoomChannelManager {
 
     public static final RoomChannelManager MANAGER_FOR_CHATROOM = new RoomChannelManager("ChatRoom");
 
+    /**
+     * 本地缓存，用于房间在线状态本地化
+     */
     private final Map<String, RoomInfo> roomInfoMap = new ConcurrentHashMap<>();
 
     @Getter

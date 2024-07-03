@@ -21,6 +21,7 @@ public class MessageQueueService {
     }
 
     public void start(RoomMessageRequest request) {
+        //根据消息优先级处理消息，进行隔离
         queues.computeIfAbsent(request.getPriority().name(), name -> new MessageQueue(name, businessType)).handle(request);
     }
 

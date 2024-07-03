@@ -18,6 +18,7 @@ public class MediumHighLevelHandler extends AbstractChatRoomHandler {
         if (FlowStrategy.PASS == getStrategy(request)) {
             return chatRoomMessageManager.sentChatRoomMessage(request);
         }
+        //当系统负载较高时，直接发送消息可能会对系统产生较大压力，影响系统的稳定性。而将消息发送到Kafka，可以将消息的处理过程异步化，减轻系统的压力
         return sendKafka(request);
     }
 
