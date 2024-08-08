@@ -26,6 +26,7 @@ public class IdleChannelHandler extends AbstractChannelHandler {
 
     public static final HashedWheelTimer IDLE_CHECK_TIMER = new HashedWheelTimer(new NamedThreadFactory("mercury-idleCheck", true), 1, TimeUnit.SECONDS, 128);
 
+
     public static final String KEY_READ_TIMESTAMP = "READ_TIMESTAMP";
 
     public static final String KEY_WRITE_TIMESTAMP = "WRITE_TIMESTAMP";
@@ -39,7 +40,9 @@ public class IdleChannelHandler extends AbstractChannelHandler {
 
     @Override
     public void connect(NettyChannel channel) throws RemoteException {
+        //存储最近一次从通道读取数据的时间戳
         setReadTimestamp(channel);
+        //存储最近一次向通道写入数据的时间戳，这些时间戳用于实现心跳检测和空闲连接探测等功能
         setWriteTimestamp(channel);
         handler.connect(channel);
         startHandshakeTask(channel);
@@ -121,7 +124,7 @@ public class IdleChannelHandler extends AbstractChannelHandler {
         ApolloConfiguration apolloConfig = SpringApplicationContext.getBean(ApolloConfiguration.class);
         int handshakeWaitSeconds = apolloConfig.getHandshakeWaitSeconds();
         if (handshakeWaitSeconds > 0) {
-            //连接建立后5秒内不握手的连接，会被HandshakeTimeoutTask强制断开
+            //连接建立后5秒内不握手的连接，会被HandshakeTimeoutTask强制断开（是否握手根据cn.bixin.sona.gateway.channel.AbstractChannel.active来判断）
             HandshakeTimeoutTask handshakeTimeoutTask = new HandshakeTimeoutTask(channel);
             channel.setAttribute(KEY_HAND_SHAKE, IDLE_CHECK_TIMER.newTimeout(handshakeTimeoutTask, handshakeWaitSeconds, TimeUnit.SECONDS));
         }

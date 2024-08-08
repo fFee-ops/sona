@@ -56,10 +56,12 @@ public class AccessFilter {
             return true;
         }
         try {
+            //默认是没有黑名单的
             for (IpFilterRule rule : rules) {
                 if (rule == null) {
                     continue;
                 }
+                // 如果规则匹配远程地址，则根据规则类型决定是否接受连接
                 if (rule.matches(remoteAddress)) {
                     return rule.ruleType() == IpFilterRuleType.ACCEPT;
                 }

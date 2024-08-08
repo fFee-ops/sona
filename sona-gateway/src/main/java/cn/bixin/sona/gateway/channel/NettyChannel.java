@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 @Slf4j
 public class NettyChannel extends AbstractChannel {
 
+    //key：channelId，value：NettyChannel
     private static final ConcurrentMap<String, NettyChannel> CHANNEL_MAP = PlatformDependent.newConcurrentHashMap(1 << 14);
     //各个连接类型的连接数
     private static final ConcurrentMap<Integer, AtomicInteger> CHANNEL_TYPE_COUNT_MAP = PlatformDependent.newConcurrentHashMap();
@@ -67,6 +68,7 @@ public class NettyChannel extends AbstractChannel {
         if (result == null) {
             NettyChannel nettyChannel = new NettyChannel(channel);
             UN_AUTH_COUNT.incrementAndGet();
+            // TODO: 2024/8/8 isActive原理 @sl
             if (channel.isActive()) {
                 nettyChannel.markActive(true);
                 result = CHANNEL_MAP.putIfAbsent(channelId, nettyChannel);

@@ -125,11 +125,21 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         handler.caught(channel, cause);
     }
 
+    /**
+     * 初始化 NettyChannel
+     *
+     * @param ch         Netty 通道
+     * @param remoteAddr 远程地址
+     * @return 初始化后的 NettyChannel
+     * @throws Exception 异常
+     */
     private NettyChannel initChannel(Channel ch, InetSocketAddress remoteAddr) throws Exception {
         if (remoteAddr == null) {
             remoteAddr = (InetSocketAddress) ch.remoteAddress();
         }
+        // 初始化通道属性：创建时间，channelId
         ChannelAttrs.init(ch, remoteAddr);
+        // 获取或添加 NettyChannel到MAP
         NettyChannel channel = NettyChannel.getOrAddChannel(ch);
         log.info("The connection of {} -> {} is established, channelId={}", channel.getRemoteAddress(), channel.getLocalAddress(), channel.getChannelId());
         handler.connect(channel);
