@@ -46,6 +46,14 @@ public class MercuryRouter implements ApplicationListener<ContextRefreshedEvent>
         return new HandlerWrapper(name, applicationContext.getBean(name, Handler.class));
     }
 
+    /**
+     * 在 Spring 应用上下文刷新时，初始化 applicationContext 并加载 Handler 类相关的资源文件
+     * <p>
+     * 应用启动时：当Spring应用启动并完成所有的Bean初始化后，会触发ContextRefreshedEvent。
+     * 调用ConfigurableApplicationContext的refresh()方法时：手动调用refresh()方法也会触发上下文刷新事件。
+     *
+     * @param event Spring 应用上下文刷新事件
+     */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         applicationContext = event.getApplicationContext();
@@ -66,6 +74,13 @@ public class MercuryRouter implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
+
+    /**
+     * 加载资源文件并解析其内容，将解析结果存储到 HANDLES 映射中
+     *
+     * @param clazz 资源文件对应的类
+     * @param url   资源文件的 URL
+     */
     private void loadResource(Class<?> clazz, URL url) {
         try {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {

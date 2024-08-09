@@ -44,11 +44,17 @@ public class SocketNotifyService {
             return null;
         }
         JSONObject jsonParam = new JSONObject();
+        // 设置消息类型为连接类型
         jsonParam.put(Constants.MQ_REPORT_KEY_TYPE, Constants.MQ_REPORT_VAL_TYPE_CONNECT);
+        // 设置通道ID
         jsonParam.put(Constants.MQ_REPORT_KEY_CHANNEL_ID, attrs.getChannelId());
+        // 设置当前时间戳
         jsonParam.put(Constants.MQ_REPORT_KEY_TIMESTAMP_SHORT, System.currentTimeMillis());
+        // 设置设备ID
         jsonParam.put(Constants.MQ_REPORT_KEY_DEVICE_ID, attrs.getDeviceId());
+        // 设置用户ID
         jsonParam.put(Constants.MQ_REPORT_KEY_UID, attrs.getUid());
+        // 设置会话状态为在线
         jsonParam.put(Constants.MQ_REPORT_KEY_SESSION, Constants.SESSION_ONLINE);
         return rocketSender.syncSend(TOPIC_SOCKET_ROOM_SESSION, null, attrs.getChannelId(), jsonParam.toJSONString());
     }

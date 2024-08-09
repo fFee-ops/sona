@@ -32,9 +32,12 @@ public class LoginAuthHandler extends AbstractHandler {
 
     @Override
     protected Object doHandle(NettyChannel channel, AccessMessage message) throws RemoteException {
+        // 解析请求体
         String bodyData = new String(message.getBody(), StandardCharsets.UTF_8);
         HandShakeBody handShake = JSON.parseObject(bodyData, HandShakeBody.class);
         String deviceId = handShake.getD();
+
+        // 检查设备 ID
         if (!StringUtils.hasText(deviceId)) {
             channel.send(AccessMessageUtils.createResponse(message.getId(), message.getCmd(), JSON.toJSONBytes(AccessResponse.ACCESS_FAIL)), false, true);
             EventRecordLog.logEvent(channel, LOGIN_EVENT, message, "EmptyDeviceId");
@@ -42,6 +45,7 @@ public class LoginAuthHandler extends AbstractHandler {
             return null;
         }
 
+        // 设置通道属性
         ChannelAttrs attrs = channel.getAttrs();
         attrs.setClientProtoVer(message.getVersion());
         attrs.setChannelType(handShake.getT());
@@ -52,19 +56,23 @@ public class LoginAuthHandler extends AbstractHandler {
         attrs.setUid(handShake.getU());
         attrs.setForeground(handShake.getB() == 0);
 
+        // 标记认证
         if (!channel.markAuth()) {
-            //重复握手直接返回成功
             EventRecordLog.logEvent(channel, LOGIN_EVENT, message, "Repeated handshake");
             return AccessResponse.SUCCESS;
         }
 
+        // 增加通道类型计数
         NettyChannel.addChannelTypeCount(channel);
-        // TODO: 2024/4/24 完善注释 @sl
-        //核心处理逻辑，登录和长链接建立事件的区别在于？？？
+
+        // 处理连接
         socketNotifyService.processConnect(channel);
+
+        // 记录事件日志和监控日志
         EventRecordLog.logEvent(channel, LOGIN_EVENT, message, bodyData);
         MonitorUtils.logCatEventWithChannelAttrs(MonitorUtils.LOGIN, "", channel, true);
+
+        // 返回成功响应
         return AccessResponse.SUCCESS;
     }
-
 }

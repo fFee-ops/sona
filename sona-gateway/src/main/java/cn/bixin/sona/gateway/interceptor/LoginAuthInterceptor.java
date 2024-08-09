@@ -23,6 +23,9 @@ public class LoginAuthInterceptor implements HandlerInterceptor {
 
     /**
      * 在登陆请求前进行拦截，判断请求是否合法
+     * <p>
+     * 请求体是否为空：检查 message 的 body 是否为空或长度为零。如果为空，则发送失败响应，并记录事件日志和监控日志，返回 false。
+     * 命令是否为登录认证命令：检查 message 的命令是否为 LOGIN_AUTH 命令。如果不是，则记录事件日志和监控日志，返回 false。
      *
      * @param channel channel
      * @param message message
